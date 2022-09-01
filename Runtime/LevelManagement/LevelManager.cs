@@ -3,11 +3,31 @@ using UnityEngine;
 
 namespace GameFramework
 {
-    public class LevelManager : ScriptableObject
+    public class LevelManager
     {
-        public static LevelManager Instance;
+        public static LevelManager Impl;
 
-        public virtual LevelAsyncOperation LoadLevelAsync(LevelAsset level)
+        public static event Action<LevelAsset> BeforeLevelLoad;
+        public static event Action<LevelAsset> AfterLevelLoad;
+        public static event Action<LevelAsset> BeforeLevelUnload;
+        public static event Action<LevelAsset> AfterLevelUnload;
+
+        protected static LevelAsset _activeLevel;
+        public static LevelAsset ActiveLevel => _activeLevel;
+
+        public static LevelAsyncOperation LoadLevelAsync(LevelAsset level)
+        {
+            return Impl.LoadLevelAsyncImpl(level);
+        }
+
+        public static LevelAsyncOperation UnloadLevelAsync()
+        {
+            return Impl.UnloadLevelAsyncImpl();
+        }
+
+        //////////////////////////////////////////////////////////////////
+
+        public virtual LevelAsyncOperation LoadLevelAsyncImpl(LevelAsset level)
         {
             if (level == _activeLevel)
             {
@@ -25,9 +45,9 @@ namespace GameFramework
             return levelOperation;
         }
 
-        public virtual LevelAsyncOperation UnloadLevelAsync()
+        public virtual LevelAsyncOperation UnloadLevelAsyncImpl()
         {
-            return LoadLevelAsync(null);
+            return LoadLevelAsyncImpl(null);
         }
 
         protected virtual async void InternalLoadLevelAsync(LevelAsyncOperation operation, AsyncOperationSource operationSource, LevelAsset level)
@@ -71,13 +91,5 @@ namespace GameFramework
 
             operationSource.SetCompleted();
         }
-
-        private LevelAsset _activeLevel;
-        public LevelAsset activeLevel => _activeLevel;
-
-        public event Action<LevelAsset> BeforeLevelLoad;
-        public event Action<LevelAsset> AfterLevelLoad;
-        public event Action<LevelAsset> BeforeLevelUnload;
-        public event Action<LevelAsset> AfterLevelUnload;
     }
 }

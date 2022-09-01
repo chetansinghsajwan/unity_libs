@@ -11,7 +11,7 @@ namespace GameFramework
 
             foreach (var scene in _scenes)
             {
-                operation.AddOperation(SceneManager.Instance
+                operation.AddOperation(SceneManager
                     .LoadSceneAsync(scene, LoadSceneMode.Additive), 1f);
                 
             }
@@ -25,7 +25,7 @@ namespace GameFramework
 
             foreach (var scene in _scenes)
             {
-                operation.AddOperation(SceneManager.Instance
+                operation.AddOperation(SceneManager
                     .UnloadSceneAsync(scene), 1f);
             }
 
