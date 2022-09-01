@@ -24,11 +24,19 @@ namespace GameFramework
         {
         }
 
+        public virtual void BeforeUnload()
+        {
+        }
+
+        public virtual void AfterUnload()
+        {
+        }
+
         public SceneObject GetSceneObject(bool find = false)
         {
             if (_sceneObject is null || find)
             {
-                _sceneObject = SceneManager.FindSceneObjectFor(this);
+                // _sceneObject = SceneManager.FindSceneObjectFor(this);
             }
 
             return _sceneObject;
