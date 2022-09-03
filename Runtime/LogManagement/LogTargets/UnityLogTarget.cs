@@ -2,34 +2,37 @@ using UnityEngine;
 
 namespace GameFramework.LogManagement
 {
-    public struct UnityLogTarget : ILogTarget
+    public class UnityLogTarget : LogTarget
     {
-        public void Log(LogEvent logEvent)
+        public override void Log(LogEvent logEvent)
         {
-            string message = logEvent.messageTemplate;
-            message = $"<b>[{logEvent.frame} {logEvent.timeStamp.DateTime} {logEvent.level}] {logEvent.category}:</b> {message}";
+            _thisLogLevel = logEvent.level;
+            base.Log(logEvent);
+        }
 
-            switch (logEvent.level)
+        protected override void InternalWrite(string logMessage)
+        {
+            switch (_thisLogLevel)
             {
                 case LogLevel.Verbose:
                 case LogLevel.Debug:
                 case LogLevel.Information:
-                    Debug.Log(message);
+                    Debug.Log(logMessage);
                     break;
 
                 case LogLevel.Warning:
-                    Debug.LogWarning(message);
+                    Debug.LogWarning(logMessage);
                     break;
 
                 case LogLevel.Error:
                 case LogLevel.Fatal:
-                    Debug.LogError(message);
+                    Debug.LogError(logMessage);
                     break;
             }
         }
 
-        public void Flush()
-        {
-        }
+        public override void Flush() { }
+
+        private LogLevel _thisLogLevel;
     }
 }

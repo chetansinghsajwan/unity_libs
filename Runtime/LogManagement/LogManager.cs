@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,21 @@ namespace GameFramework.LogManagement
 {
     public class LogManager
     {
+        public struct DefaultLogFormatter : ILogFormatter
+        {
+            public string Format(LogEvent logEvent)
+            {
+                string message = $"[{logEvent.frame} {logEvent.timeStamp.DateTime} {logEvent.level}] {logEvent.category}: {logEvent.messageTemplate}";
+
+                if (logEvent.exception is not null)
+                {
+                    message = $"{message}{Environment.NewLine}{logEvent.exception}";
+                }
+
+                return message;
+            }
+        }
+
         public static LogManager Instance;
         public static ILogger Logger = new SilentLogger();
 
@@ -34,10 +50,13 @@ namespace GameFramework.LogManagement
 
         protected virtual ILogger CreateGlobalLogger()
         {
-            Logger logger = new Logger("", LogLevel.Information,
-                new FileLogTarget(GetAddressFor("GameLog"), FileMode.Create),
-                new UnityLogTarget());
+            var file = new FileLogTarget(GetAddressFor("GameLog"), FileMode.Create);
+            file.formatter = new DefaultLogFormatter();
 
+            var unity = new UnityLogTarget();
+            unity.formatter = new DefaultLogFormatter();
+
+            Logger logger = new Logger("", DefaultLogLevel, file, unity);
             return new AsyncLogger(logger);
         }
 
