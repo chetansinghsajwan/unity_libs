@@ -3,10 +3,12 @@ using System.IO;
 
 namespace GameFramework.LogManagement
 {
-    public class StreamLogTarget : ILogTarget
+    public class StreamLogTarget : LogTarget
     {
         ~StreamLogTarget()
         {
+            _writer?.Flush();
+            _stream?.Flush();
             _stream?.Close();
         }
 
@@ -18,17 +20,18 @@ namespace GameFramework.LogManagement
             _writer = new StreamWriter(stream);
         }
 
-        public void Log(LogEvent logEvent)
+        protected override void InternalWrite(string logMessage)
         {
-            _writer.Write(logEvent.messageTemplate);
+            _writer.Write(logMessage);
+            _writer.Flush();
         }
 
-        public void Flush()
+        public override void Flush()
         {
             _writer.Flush();
         }
 
-        protected Stream stream
+        public Stream stream
         {
             get => _stream;
             set

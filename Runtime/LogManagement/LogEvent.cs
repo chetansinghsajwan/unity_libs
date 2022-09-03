@@ -42,7 +42,7 @@ namespace GameFramework.LogManagement
         public string AddChildCategory(string childCategory)
         {
             category ??= "";
-            if (childCategory is null) return category;
+            if (String.IsNullOrEmpty(childCategory)) return category;
 
             if (category.Length > 0)
             {
@@ -54,7 +54,13 @@ namespace GameFramework.LogManagement
             }
 
             return category;
-
         }
+    }
+
+    public static class LogLevelAlias
+    {
+        public const LogLevel Minimum = LogLevel.Verbose;
+        public const LogLevel Default = LogLevel.Information;
+        public const LogLevel Maximum = LogLevel.Fatal;
     }
 }
