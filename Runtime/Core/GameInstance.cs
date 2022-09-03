@@ -1,3 +1,5 @@
+using GameFramework.LogManagement;
+
 namespace GameFramework
 {
     public class GameInstance
@@ -6,6 +8,12 @@ namespace GameFramework
         
         public virtual void Init()
         {
+            if (LogManager.Instance is null)
+            {
+                LogManager.Instance = LogManagerFactory.Create();
+                LogManager.Instance.Init();
+            }
+
             if (LevelManager.Impl is null)
             {
                 LevelManager.Impl = LevelManagerFactory.Create();

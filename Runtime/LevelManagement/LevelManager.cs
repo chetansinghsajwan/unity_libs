@@ -69,9 +69,7 @@ namespace GameFramework
                     operation.AddOperation(loadOp, .9f);
                 }
 
-                Debug.Log("LevelManager: awaiting loadOp");
                 await loadOp;
-                Debug.Log("LevelManager: completed loadOp");
 
                 _activeLevel = level;
                 AfterLevelLoad?.Invoke(level);
