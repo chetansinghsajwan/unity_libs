@@ -5,7 +5,7 @@ namespace GameFramework
     public class GameInstance
     {
         public static GameInstance Instance;
-        
+
         public virtual void Init()
         {
             if (LogManager.Instance is null)

@@ -28,7 +28,7 @@ namespace GameFramework
             scenePath ??= string.Empty;
 
             // create sceneAssetPath and load SceneAsset
-            if (String.IsNullOrEmpty(scenePath) == false)
+            if (String.IsNullOrEmpty(scenePath) is false)
             {
                 sceneAssetPath = $"Assets/{scenePath}.unity";
                 sceneAsset = AssetDatabase.LoadAssetAtPath<UnitySceneAsset>(

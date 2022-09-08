@@ -28,7 +28,7 @@ namespace GameFramework.Extensions
             {
                 foreach (var operation in _operations)
                 {
-                    if (operation.isDone == false)
+                    if (operation.isDone is false)
                         return false;
                 }
 

@@ -27,7 +27,7 @@ namespace GameFramework
             {
                 foreach (var operation in _operations)
                 {
-                    if (operation.isCompleted == false)
+                    if (operation.isCompleted is false)
                         return false;
                 }
 
