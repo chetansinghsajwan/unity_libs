@@ -25,7 +25,7 @@ namespace GameFramework.LogManagement
 
         public void Write(LogEvent logEvent)
         {
-            if (IsEnabled(logEvent.level) == false) return;
+            if (IsEnabled(logEvent.level) is false) return;
 
             logEvent.AddParentCategory(category);
 

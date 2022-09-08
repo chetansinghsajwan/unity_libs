@@ -40,7 +40,7 @@ namespace GameFramework.LogManagement
             {
                 if (_dispose)
                 {
-                    if (_logEvents.Count == 0 && _completeTasksBeforeDisposing == false)
+                    if (_logEvents.Count == 0 && _completeTasksBeforeDisposing is false)
                     {
                         _mSyncEvent.Set();
                         break;
