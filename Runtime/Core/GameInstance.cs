@@ -1,13 +1,16 @@
+using System.Reflection;
+using UnityEngine;
 using GameFramework.LogManagement;
 
 namespace GameFramework
 {
-    public class GameInstance
+    public static class GameInstance
     {
-        public static GameInstance Instance;
-
-        public virtual void Init()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        public static void Init()
         {
+            RootSystem = new UnityRootSystem();
+
             if (LogManager.Instance is null)
             {
                 LogManager.Instance = LogManagerFactory.Create();
@@ -25,8 +28,10 @@ namespace GameFramework
             }
         }
 
-        public virtual void Shutdown()
+        public static void Shutdown()
         {
         }
+
+        public static GameSystem RootSystem;
     }
 }
