@@ -9,7 +9,7 @@ namespace GameFramework
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init()
         {
-            RootSystem = new UnityRootSystem();
+            RootSystem = new UnityRootGameSystem();
 
             if (LogManager.Instance is null)
             {
