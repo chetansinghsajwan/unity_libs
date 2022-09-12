@@ -1,6 +1,4 @@
-using System.Reflection;
 using UnityEngine;
-using GameFramework.LogManagement;
 
 namespace GameFramework
 {
@@ -10,12 +8,6 @@ namespace GameFramework
         public static void Init()
         {
             RootSystem = new UnityRootGameSystem();
-
-            if (LogManager.Instance is null)
-            {
-                LogManager.Instance = LogManagerFactory.Create();
-                LogManager.Instance.Init();
-            }
 
             if (SceneManager.Impl is null)
             {
