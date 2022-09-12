@@ -4,28 +4,40 @@ namespace GameFramework
 {
     public abstract class AsyncOperation
     {
-        // Invokes OnCompleted if not null
+        /// <summary>
+        /// Invokes OnCompleted if not null
+        /// </summary>
         protected void SafeInvokeOnCompleted()
         {
             OnCompleted?.Invoke(this);
         }
 
-        // Invokes OnCompleted even if is null
+        /// <summary>
+        /// Invokes OnCompleted even if is null
+        /// </summary>
         protected void InvokeOnCompleted()
         {
             OnCompleted.Invoke(this);
         }
 
-        // What's the operation's progress, 0f-1f
+        /// <summary>
+        /// What's the operation's progress, 0f-1f
+        /// </summary>
         public abstract float progress { get; }
 
-        // What's the operation's progress percentage, 0f-100f
+        /// <summary>
+        /// What's the operation's progress percentage, 0f-100f
+        /// </summary>
         public float percent => progress * 100f;
 
-        // Has the operation finished?
+        /// <summary>
+        /// Has the operation finished?
+        /// </summary>
         public abstract bool isCompleted { get; }
 
-        // Event invoked when operation is completed
+        /// <summary>
+        /// Event invoked when operation is completed
+        /// </summary>
         public event Action<AsyncOperation> OnCompleted;
     }
 }

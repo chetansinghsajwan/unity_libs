@@ -1,11 +1,15 @@
 using System;
-using UnityEngine.LowLevel;
+using System.Reflection;
+using System.Collections.Generic;
+using SystemType = System.Type;
 
 namespace GameFramework
 {
-    public class UnityRootSystem : GameSystem
+    public class RootGameSystem : GameSystem
     {
-        public UnityRootSystem()
+        public RootGameSystem() : this(new BufferedGameSystemManager()) { }
+
+        public RootGameSystem(GameSystemManager systemManager) : base(systemManager)
         {
             Init();
         }
@@ -14,15 +18,124 @@ namespace GameFramework
         {
             base.Init();
 
-            PlayerLoopSystem rootSystem = PlayerLoop.GetCurrentPlayerLoop();
+            FindAndRegisterSystems();
+        }
 
-            PlayerLoopSystem customSystem = new PlayerLoopSystem();
-            customSystem.updateDelegate += () => this.Update();
+        protected virtual void FindAndRegisterSystems()
+        {
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            Array.Resize(ref rootSystem.subSystemList, rootSystem.subSystemList.Length);
-            rootSystem.subSystemList[rootSystem.subSystemList.Length - 1] = customSystem;
+            IEnumerable<SystemType> enumerator()
+            {
+                foreach (var assembly in assemblies)
+                    foreach (var systemType in FindSystemsFromAssembly(assembly))
+                    {
+                        yield return systemType;
+                    }
+            }
 
-            PlayerLoop.SetPlayerLoop(rootSystem);
+            CreateAndRegisterSystemsFromTypes(enumerator());
+        }
+
+        protected virtual void RegisterSystemsFromAssembly(Assembly assembly)
+        {
+            // no need to check for (assembly is null), FindSystemsFromAssembly(assembly) does that for us
+            CreateAndRegisterSystemsFromTypes(FindSystemsFromAssembly(assembly));
+        }
+
+        protected virtual IEnumerable<SystemType> FindSystemsFromAssembly(Assembly assembly)
+        {
+            if (assembly is not null)
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(GameSystem)) is false) continue;
+
+                    var attribute = type.GetCustomAttribute<GameSystemRegistrationAttribute>();
+                    if (attribute is null) continue;
+
+                    yield return type;
+                }
+            }
+        }
+
+        protected void CreateAndRegisterSystemsFromTypes(IEnumerable<SystemType> systemTypes)
+        {
+            foreach (var systemType in systemTypes)
+            {
+                try
+                {
+                    CreateAndRegisterSystemFromType(systemType, out _);
+                }
+                catch (Exception ex)
+                {
+                    UnityEngine.Debug.LogError($"Failed registering GameSystem {systemType?.FullName}\nException: {ex.Message}");
+                }
+            }
+        }
+
+        protected void CreateAndRegisterSystemFromType(SystemType systemType, out GameSystem system)
+        {
+            if (systemType is null)
+            {
+                throw new Exception($"cannot create a system of null type");
+            }
+
+            var attribute = systemType.GetCustomAttribute<GameSystemRegistrationAttribute>();
+            if (attribute is null)
+            {
+                throw new Exception($"{systemType.FullName} does not contain {nameof(GameSystemRegistrationAttribute)} attribute");
+            }
+
+            GameSystem parentSystem = null;
+            SystemType parentSystemType = attribute.parent;
+
+            if (parentSystemType is not null)
+            {
+                // check if parent system already exists
+                parentSystem = SubSystems.GetSystem(parentSystemType);
+                if (parentSystem is null)
+                {
+                    try
+                    {
+                        // create parent system first
+                        CreateAndRegisterSystemFromType(parentSystemType, out parentSystem);
+                    }
+                    catch (Exception ex)
+                    {
+                        UnityEngine.Debug.LogError($"could not create parent system {parentSystemType.FullName} for {systemType.FullName}\nException: {ex.Message}");
+                        throw;
+                    }
+
+                    // 1. fail
+                    // 2.a. set parent system to root
+                    // 2.b. set parent system to root in group (name:failed)
+                    // 3.a. set parent fallback
+                    // 3.b. set parent fallback in group (name:failed)
+                    // 4 create failed group instead
+                }
+            }
+            else
+            {
+                parentSystem = this;
+            }
+
+            try
+            {
+                system = Activator.CreateInstance(systemType) as GameSystem;
+                if (system is null)
+                {
+                    throw new SystemException($"could not create instance of GameSystem {systemType.FullName}");
+                }
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError(ex.Message);
+                throw;
+            }
+
+            parentSystem.SubSystems.RegisterSystem(system,
+                attribute.type, attribute.priority, attribute.force);
         }
     }
 }

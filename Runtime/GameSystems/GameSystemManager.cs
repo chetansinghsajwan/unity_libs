@@ -61,6 +61,7 @@ namespace GameFramework
 
                 // allow systems to be registered only for types deriving
                 // from GameSystem and not even GameSystem itself
+                // to promote structured workflow
                 return type.IsSubclassOf(typeof(GameSystem));
             }
         }
