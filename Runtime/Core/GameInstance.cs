@@ -8,11 +8,6 @@ namespace GameFramework
         public static void Init()
         {
             RootSystem = new UnityRootGameSystem();
-
-            if (SceneManager.Impl is null)
-            {
-                SceneManager.Impl = SceneManagerFactory.Create();
-            }
         }
 
         public static void Shutdown()

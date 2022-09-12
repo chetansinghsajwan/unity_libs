@@ -1,10 +1,5 @@
 using System;
-using System.IO;
-using System.Linq;
-using UnityEngine;
-using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 using UnityLoadSceneMode = UnityEngine.SceneManagement.LoadSceneMode;
-using UnityAsyncOperation = UnityEngine.AsyncOperation;
 
 namespace GameFramework
 {
@@ -16,14 +11,33 @@ namespace GameFramework
         Additive = 1
     }
 
-    public class SceneManager
+    public static class SceneManager
     {
-        public static SceneManager Impl;
+        public static SceneManagerSystem System;
 
-        public static event Action<SceneAsset, LoadSceneMode> BeforeSceneLoad;
-        public static event Action<SceneAsset, LoadSceneMode> AfterSceneLoad;
-        public static event Action<SceneAsset> BeforeSceneUnload;
-        public static event Action<SceneAsset> AfterSceneUnload;
+        public static event Action<SceneAsset, LoadSceneMode> BeforeSceneLoad
+        {
+            add => System.BeforeSceneLoad += value;
+            remove => System.BeforeSceneLoad -= value;
+        }
+
+        public static event Action<SceneAsset, LoadSceneMode> AfterSceneLoad
+        {
+            add => System.AfterSceneLoad += value;
+            remove => System.AfterSceneLoad -= value;
+        }
+
+        public static event Action<SceneAsset> BeforeSceneUnload
+        {
+            add => System.BeforeSceneUnload += value;
+            remove => System.BeforeSceneUnload -= value;
+        }
+
+        public static event Action<SceneAsset> AfterSceneUnload
+        {
+            add => System.AfterSceneUnload += value;
+            remove => System.AfterSceneUnload -= value;
+        }
 
         public const LoadSceneMode DEFAULT_LOAD_SCENE_MODE = LoadSceneMode.Additive;
 
@@ -34,125 +48,12 @@ namespace GameFramework
 
         public static SceneAsyncOperation LoadSceneAsync(SceneAsset scene, LoadSceneMode mode = DEFAULT_LOAD_SCENE_MODE)
         {
-            return Impl.LoadSceneAsyncImpl(scene, mode);
+            return System.LoadSceneAsync(scene, mode);
         }
 
         public static SceneAsyncOperation UnloadSceneAsync(SceneAsset scene)
         {
-            return Impl.UnloadSceneAsyncImpl(scene);
-        }
-
-        //////////////////////////////////////////////////////////////////
-
-        public virtual SceneObject FindSceneObjectFor(SceneAsset scene)
-        {
-            string sceneName = Path.GetFileName(scene.scenePath);
-            return GameObject.FindGameObjectsWithTag(SceneObject.GAME_OBJECT_TAG)
-                .Select((GameObject gameObject) =>
-                {
-                    if (gameObject.scene.name == sceneName)
-                    {
-                        return gameObject.GetComponent<SceneObject>();
-                    }
-
-                    return null;
-                })
-                .Single((SceneObject sceneObject) => sceneObject is not null);
-        }
-
-        public virtual SceneObject[] FindSceneObjectsFor(SceneAsset scene)
-        {
-            string sceneName = Path.GetFileName(scene.scenePath);
-            return GameObject.FindGameObjectsWithTag(SceneObject.GAME_OBJECT_TAG)
-                .Select((GameObject gameObject) =>
-                {
-                    if (gameObject.scene.name == sceneName)
-                    {
-                        return gameObject.GetComponent<SceneObject>();
-                    }
-
-                    return null;
-                })
-                .ToArray();
-        }
-
-        public virtual void LoadSceneImpl(SceneAsset scene, LoadSceneMode mode)
-        {
-            AssertSceneIsNull(scene);
-
-            BeforeSceneLoad?.Invoke(scene, mode);
-
-            scene.BeforeLoad(mode);
-            UnitySceneManager.LoadScene(scene.scenePath, (UnityLoadSceneMode)mode);
-            scene.AfterLoad(mode);
-
-            AfterSceneLoad?.Invoke(scene, mode);
-        }
-
-        public virtual SceneAsyncOperation LoadSceneAsyncImpl(SceneAsset scene, LoadSceneMode mode)
-        {
-            AssertSceneIsNull(scene);
-
-            BeforeSceneLoad?.Invoke(scene, mode);
-
-            scene.BeforeLoad(mode);
-            UnityAsyncOperation asyncOperation = UnitySceneManager
-                .LoadSceneAsync(scene.scenePath, (UnityLoadSceneMode)mode);
-
-            asyncOperation.completed += (AsyncOperation) =>
-            {
-                scene.AfterLoad(mode);
-                AfterSceneLoad?.Invoke(scene, mode);
-            };
-
-            return new SceneAsyncOperation(asyncOperation);
-        }
-
-        [Obsolete("Use SceneManager.UnloadSceneAsync. This function is not safe to use during triggers and under other circumstances. See Scripting reference for more details.")]
-        public virtual void UnloadSceneImpl(SceneAsset scene)
-        {
-            AssertSceneIsNull(scene);
-
-            if (BeforeSceneUnload is not null)
-            {
-                BeforeSceneUnload(scene);
-            }
-
-            scene.BeforeUnload();
-            UnitySceneManager.UnloadScene(scene.scenePath);
-            scene.AfterUnload();
-
-            if (AfterSceneUnload is not null)
-            {
-                AfterSceneUnload(scene);
-            }
-        }
-
-        public virtual SceneAsyncOperation UnloadSceneAsyncImpl(SceneAsset scene)
-        {
-            AssertSceneIsNull(scene);
-
-            BeforeSceneUnload?.Invoke(scene);
-
-            scene.BeforeUnload();
-            UnityAsyncOperation asyncOperation = UnitySceneManager
-                .UnloadSceneAsync(scene.scenePath);
-
-            asyncOperation.completed += (AsyncOperation) =>
-            {
-                scene.AfterUnload();
-                AfterSceneUnload?.Invoke(scene);
-            };
-
-            return new SceneAsyncOperation(asyncOperation);
-        }
-
-        protected virtual void AssertSceneIsNull(SceneAsset scene)
-        {
-            if (scene is null)
-            {
-                throw new NullReferenceException("cannot load null scene");
-            }
+            return System.UnloadSceneAsync(scene);
         }
     }
 }
