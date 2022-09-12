@@ -17,11 +17,6 @@ namespace GameFramework
                 LogManager.Instance.Init();
             }
 
-            if (LevelManager.Impl is null)
-            {
-                LevelManager.Impl = LevelManagerFactory.Create();
-            }
-
             if (SceneManager.Impl is null)
             {
                 SceneManager.Impl = SceneManagerFactory.Create();
