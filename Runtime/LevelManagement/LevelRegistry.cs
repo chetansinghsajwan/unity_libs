@@ -5,18 +5,17 @@ namespace GameFramework
 {
     public interface IKeyResolver<TKey, TValue>
     {
-        TKey GetKey(TValue value);
+        TKey ResolveKey(TValue value);
     }
 
     public interface ILevelKeyResolver : IKeyResolver<string, LevelAsset> { }
 
-    public class LevelRegistry
+    [GameSystemRegistration(typeof(LevelRegistry))]
+    public class LevelRegistry : GameSystem
     {
-        public static LevelRegistry Instance;
-
-        public struct DefaultKeyResolver : ILevelKeyResolver
+        public struct KeyResolver : ILevelKeyResolver
         {
-            public string GetKey(LevelAsset value)
+            public string ResolveKey(LevelAsset value)
             {
                 if (value is not null)
                 {
@@ -30,7 +29,15 @@ namespace GameFramework
         public LevelRegistry()
         {
             _levels = new Dictionary<string, LevelAsset>();
-            _keyResolver = new DefaultKeyResolver();
+            _keyResolver = new KeyResolver();
+        }
+
+        protected override void OnRegistered(GameSystem system)
+        {
+            base.OnRegistered(system);
+
+            LevelManager.Registry = this;
+            UpdateRegistry();
         }
 
         public virtual void UpdateRegistry()
@@ -82,34 +89,32 @@ namespace GameFramework
             keys = keyList.ToArray();
         }
 
-        public bool Register(IReadOnlyCollection<LevelAsset> levels)
+        public void Register(IReadOnlyCollection<LevelAsset> levels)
         {
             _levels.EnsureCapacity(levels.Count);
-            foreach (var level in levels)
-            {
-                _levels.TryAdd(_keyResolver.GetKey(level), level);
-            }
-
-            return true;
+            Register(levels as IEnumerable<LevelAsset>);
         }
 
-        public bool Register(IEnumerable<LevelAsset> levels)
+        public void Register(IEnumerable<LevelAsset> levels)
         {
             foreach (var level in levels)
             {
-                _levels.TryAdd(_keyResolver.GetKey(level), level);
+                Register(level);
             }
+        }
 
-            return true;
+        public bool Register(LevelAsset level)
+        {
+            return Register(level, out _);
         }
 
         public bool Register(LevelAsset level, out string name)
         {
-            name = _keyResolver.GetKey(level);
+            name = _keyResolver.ResolveKey(level);
             return Register(level, name);
         }
 
-        public bool Register(LevelAsset level, string name)
+        public virtual bool Register(LevelAsset level, string name)
         {
             return _levels.TryAdd(name, level);
         }
@@ -150,7 +155,7 @@ namespace GameFramework
         }
 
         protected ILevelKeyResolver _keyResolver;
-        public virtual ILevelKeyResolver KeyResolver
+        public virtual ILevelKeyResolver keyResolver
         {
             get => _keyResolver;
             set => _keyResolver = value;

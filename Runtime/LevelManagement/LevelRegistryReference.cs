@@ -18,7 +18,7 @@ namespace GameFramework
 
         public LevelAsset Update()
         {
-            _registry = LevelRegistry.Instance;
+            _registry = LevelManager.Registry;
             _level = null;
 
             if (_registry is not null)

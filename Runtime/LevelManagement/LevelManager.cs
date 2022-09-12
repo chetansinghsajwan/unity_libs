@@ -4,20 +4,29 @@ namespace GameFramework
 {
     public static class LevelManager
     {
+        private static LevelManagerSystem _system = NullLevelManagerSystem.Instance;
         public static LevelManagerSystem System
         {
             get => _system;
             set
             {
-                if (value is null)
-                {
-                    value = NullLevelManagerSystem.Instance;
-                }
+                value ??= NullLevelManagerSystem.Instance;
 
                 _system = value;
             }
         }
-        private static LevelManagerSystem _system = NullLevelManagerSystem.Instance;
+
+        private static LevelRegistry _registry;
+        public static LevelRegistry Registry
+        {
+            get => _registry;
+            set
+            {
+                value ??= NullLevelRegistry.Instance;
+
+                _registry = value;
+            }
+        }
 
         public static event Action<LevelAsset> BeforeLevelLoad
         {
@@ -56,6 +65,12 @@ namespace GameFramework
         public static LevelAsyncOperation UnloadLevelAsync()
         {
             return _system.UnloadLevelAsync();
+        }
+
+        public static LevelAsyncOperation LoadLevelAsyncFromRegistry(string levelKey)
+        {
+            _registry.GetLevel(levelKey, out LevelAsset level);
+            return _system.LoadLevelAsync(level);
         }
     }
 }

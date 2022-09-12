@@ -58,7 +58,7 @@ namespace GameFramework
         {
             const float SEPARATOR = 4f;
 
-            LevelRegistry registry = LevelRegistry.Instance;
+            LevelRegistry registry = LevelManager.Registry;
             LevelAsset prevLevel = newLevel;
             string prevKey = newKey;
 
