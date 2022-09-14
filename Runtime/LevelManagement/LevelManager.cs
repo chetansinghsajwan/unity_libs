@@ -1,6 +1,6 @@
 using System;
 
-namespace GameFramework
+namespace GameFramework.LevelManagement
 {
     public static class LevelManager
     {
