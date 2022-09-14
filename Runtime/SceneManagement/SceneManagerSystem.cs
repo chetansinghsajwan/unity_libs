@@ -55,11 +55,7 @@ namespace GameFramework
             AssertSceneIsNull(scene);
 
             BeforeSceneLoad?.Invoke(scene, mode);
-
-            scene.BeforeLoad(mode);
             UnitySceneManager.LoadScene(scene.scenePath, (UnityLoadSceneMode)mode);
-            scene.AfterLoad(mode);
-
             AfterSceneLoad?.Invoke(scene, mode);
         }
 
@@ -68,14 +64,11 @@ namespace GameFramework
             AssertSceneIsNull(scene);
 
             BeforeSceneLoad?.Invoke(scene, mode);
-
-            scene.BeforeLoad(mode);
             UnityAsyncOperation asyncOperation = UnitySceneManager
                 .LoadSceneAsync(scene.scenePath, (UnityLoadSceneMode)mode);
 
             asyncOperation.completed += (AsyncOperation) =>
             {
-                scene.AfterLoad(mode);
                 AfterSceneLoad?.Invoke(scene, mode);
             };
 
@@ -92,9 +85,7 @@ namespace GameFramework
                 BeforeSceneUnload(scene);
             }
 
-            scene.BeforeUnload();
             UnitySceneManager.UnloadScene(scene.scenePath);
-            scene.AfterUnload();
 
             if (AfterSceneUnload is not null)
             {
@@ -108,13 +99,11 @@ namespace GameFramework
 
             BeforeSceneUnload?.Invoke(scene);
 
-            scene.BeforeUnload();
             UnityAsyncOperation asyncOperation = UnitySceneManager
                 .UnloadSceneAsync(scene.scenePath);
 
             asyncOperation.completed += (AsyncOperation) =>
             {
-                scene.AfterUnload();
                 AfterSceneUnload?.Invoke(scene);
             };
 
@@ -123,7 +112,7 @@ namespace GameFramework
 
         protected virtual void AssertSceneIsNull(SceneAsset scene)
         {
-            if (scene is null)
+            if (String.IsNullOrEmpty(scene.scenePath))
             {
                 throw new NullReferenceException("cannot load null scene");
             }

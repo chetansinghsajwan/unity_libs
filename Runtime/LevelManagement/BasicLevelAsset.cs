@@ -13,7 +13,6 @@ namespace GameFramework
             {
                 operation.AddOperation(SceneManager
                     .LoadSceneAsync(scene, LoadSceneMode.Additive), 1f);
-                
             }
 
             return operation;
