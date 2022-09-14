@@ -1,54 +1,61 @@
+using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR
+
+using System.IO;
+using UnityEditor;
+using UnitySceneAsset = UnityEditor.SceneAsset;
+
+#endif
 
 namespace GameFramework
 {
-    [CreateAssetMenu(menuName = MENU_PATH + MENU_NAME, fileName = FILE_NAME)]
-    public class SceneAsset : ScriptableObject
+    [Serializable]
+    public struct SceneAsset : ISerializationCallbackReceiver
     {
-        public const string MENU_PATH = GameFrameworkConstants.MENU_PATH + "Scenes/";
-        public const string MENU_NAME = "SceneAsset";
-        public const string FILE_NAME = "SceneAsset";
+        [SerializeField]
+        private string _scenePath;
+        public string scenePath => _scenePath;
 
-        public SceneAsset()
+        public static implicit operator string(SceneAsset sceneReference)
         {
-            _scenePath = string.Empty;
-            _sceneObject = null;
+            return sceneReference._scenePath;
         }
 
-        public virtual void BeforeLoad(LoadSceneMode loadSceneMode)
-        {
-        }
-
-        public virtual void AfterLoad(LoadSceneMode loadSceneMode)
-        {
-        }
-
-        public virtual void BeforeUnload()
-        {
-        }
-
-        public virtual void AfterUnload()
-        {
-        }
-
-        public SceneObject GetSceneObject(bool find = false)
-        {
-            if (_sceneObject is null || find)
-            {
-                // _sceneObject = SceneManager.FindSceneObjectFor(this);
-            }
-
-            return _sceneObject;
-        }
+#if UNITY_EDITOR
 
         [SerializeField]
-        protected string _scenePath;
-        public string scenePath
+        private UnitySceneAsset _sceneAsset;
+
+        public void OnBeforeSerialize()
         {
-            get => _scenePath;
+            string prevScenePath = _scenePath;
+            _scenePath = "";
+
+            if (_sceneAsset != null)
+            {
+                string assetPath = AssetDatabase.GetAssetPath(_sceneAsset);
+                if (String.IsNullOrEmpty(assetPath) is false)
+                {
+                    // to remove assets from starting
+                    _scenePath = Path.ChangeExtension(assetPath, null).Substring(7);
+                }
+            }
+
+            if (prevScenePath != _scenePath)
+            {
+                Debug.Log($"<b>SceneReferenceSerializer:</b> OnAfterSerialize(): ScenePath[{_scenePath}]");
+            }
         }
 
-        protected SceneObject _sceneObject;
+        public void OnAfterDeserialize() { }
+
+#else
+
+        public void OnBeforeSerialize() { }
+        public void OnAfterDeserialize() { }
+
+#endif
     }
 }
