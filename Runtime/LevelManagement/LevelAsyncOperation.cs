@@ -1,4 +1,4 @@
-namespace GameFramework
+namespace GameFramework.LevelManagement
 {
     public class LevelAsyncOperation : AggregateAsyncOperation
     {

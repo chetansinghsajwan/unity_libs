@@ -1,6 +1,6 @@
 using System;
 
-namespace GameFramework
+namespace GameFramework.LevelManagement
 {
     [GameSystemRegistration(typeof(LevelManagerSystem))]
     public class LevelManagerSystem : GameSystem

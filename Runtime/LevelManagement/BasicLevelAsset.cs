@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameFramework
+namespace GameFramework.LevelManagement
 {
     [CreateAssetMenu(menuName = MENU_PATH + "Basic LevelAsset", fileName = "Basic LevelAsset")]
     public class BasicLevelAsset : LevelAsset

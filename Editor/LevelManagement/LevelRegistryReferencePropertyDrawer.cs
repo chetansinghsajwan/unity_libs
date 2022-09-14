@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace GameFramework
+namespace GameFramework.LevelManagement.Editor
 {
     [CustomPropertyDrawer(typeof(LevelRegistryReference))]
     public class LevelRegistryReferenceEditor : PropertyDrawer

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameFramework
+namespace GameFramework.LevelManagement
 {
     public abstract class LevelAsset : ScriptableObject
     {

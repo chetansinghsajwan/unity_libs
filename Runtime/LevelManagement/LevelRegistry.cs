@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameFramework
+namespace GameFramework.LevelManagement
 {
     public interface IKeyResolver<TKey, TValue>
     {

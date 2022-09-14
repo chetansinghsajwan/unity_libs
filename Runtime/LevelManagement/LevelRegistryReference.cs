@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GameFramework
+namespace GameFramework.LevelManagement
 {
     [Serializable]
     public struct LevelRegistryReference
