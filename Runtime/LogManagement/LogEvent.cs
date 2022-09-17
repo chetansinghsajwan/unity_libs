@@ -25,7 +25,8 @@ namespace GameFramework.Logging
         public string AddParentCategory(string parentCategory)
         {
             category ??= "";
-            if (String.IsNullOrEmpty(parentCategory)) return category;
+            if (parentCategory is null || parentCategory is "")
+                return category;
 
             if (category.Length > 0)
             {

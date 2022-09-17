@@ -1,6 +1,6 @@
 namespace GameFramework.Logging
 {
-    public struct SilentLogger : ILogger
+    public struct SilentLogger : IGameLogger
     {
         public bool IsEnabled(LogLevel level) => false;
 
