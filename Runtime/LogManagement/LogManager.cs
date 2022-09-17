@@ -1,13 +1,10 @@
-using System;
-using System.IO;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
-    public static class LogManager
+    public static class GameLog
     {
-        public static LogManagerSystem System;
+        public static GameLogSystem System;
         public static ILogger Logger = new SilentLogger();
 
         public static LogLevel DefaultLogLevel = LogLevel.Information;

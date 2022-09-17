@@ -3,10 +3,10 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
-    [GameSystemRegistration(typeof(LogManagerSystem))]
-    public class LogManagerSystem : GameSystem
+    [GameSystemRegistration(typeof(GameLogSystem))]
+    public class GameLogSystem : GameSystem
     {
         public struct DefaultLogFormatter : ILogFormatter
         {
@@ -27,7 +27,7 @@ namespace GameFramework.LogManagement
         {
             base.OnRegistered(system);
 
-            LogManager.System = this;
+            GameLog.System = this;
 
 #if UNITY_EDITOR
             _logPath = Application.dataPath.Replace("Assets", "Logs/");
@@ -37,10 +37,10 @@ namespace GameFramework.LogManagement
 
             Debug.Log($"<b>GameLog LogPath:</b> {_logPath}");
 
-            LogManager.Logger = CreateGlobalLogger();
-            if (LogManager.Logger is null)
+            GameLog.Logger = CreateGlobalLogger();
+            if (GameLog.Logger is null)
             {
-                LogManager.Logger = new SilentLogger();
+                GameLog.Logger = new SilentLogger();
             }
         }
 
@@ -52,7 +52,7 @@ namespace GameFramework.LogManagement
             var unity = new UnityLogTarget();
             unity.formatter = new DefaultLogFormatter();
 
-            Logger logger = new Logger("", LogManager.DefaultLogLevel, file, unity);
+            Logger logger = new Logger("", GameLog.DefaultLogLevel, file, unity);
             return new AsyncLogger(logger);
         }
 
@@ -63,7 +63,7 @@ namespace GameFramework.LogManagement
 
         public virtual ILogger CreateLogger(string category, IEnumerable<ILogTarget> logTargets)
         {
-            return CreateSubLogger(LogManager.Logger, category, logTargets);
+            return CreateSubLogger(GameLog.Logger, category, logTargets);
         }
 
         public virtual ILogger CreateSubLogger(ILogger logger, string category, params ILogTarget[] logTargets)
@@ -77,7 +77,7 @@ namespace GameFramework.LogManagement
             logTargetList.Add(new LoggerLogTarget(logger));
             logTargetList.AddRange(logTargets);
 
-            return new Logger(category, LogManager.DefaultLogLevel, logTargetList.ToArray());
+            return new Logger(category, GameLog.DefaultLogLevel, logTargetList.ToArray());
         }
 
         public virtual string GetAddressFor(string logFile)

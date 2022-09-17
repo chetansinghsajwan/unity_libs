@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
     public class MultiLogTarget : ILogTarget
     {

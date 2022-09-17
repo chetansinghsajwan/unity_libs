@@ -1,6 +1,6 @@
 using System;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
     public enum LogLevel
     {

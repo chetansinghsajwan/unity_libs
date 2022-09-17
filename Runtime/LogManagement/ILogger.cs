@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
     public interface ILogger
     {
