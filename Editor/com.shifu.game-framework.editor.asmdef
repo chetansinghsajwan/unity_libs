@@ -1,0 +1,16 @@
+{
+    "name": "com.shifu.game-framework.editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7052528d96a4fcac48386e3883ae3761"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
