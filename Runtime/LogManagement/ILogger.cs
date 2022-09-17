@@ -1,3 +1,6 @@
+// copied from Serilog (logging library)
+// https://github.com/serilog/serilog.git/ -> src/Serilog/ILogger.cs
+
 using System;
 using UnityEngine;
 
