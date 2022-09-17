@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
     public class Logger : ILogger
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
     public class UnityLogTarget : LogTarget
     {

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
     public class StreamLogTarget : LogTarget
     {

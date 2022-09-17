@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Collections.Concurrent;
 
-namespace GameFramework.LogManagement
+namespace GameFramework.Logging
 {
     public class AsyncLogger : ILogger
     {
