@@ -2,7 +2,7 @@ namespace GameFramework.Logging
 {
     public struct LoggerLogTarget : ILogTarget
     {
-        public LoggerLogTarget(ILogger logger)
+        public LoggerLogTarget(IGameLogger logger)
         {
             this.logger = logger;
         }
@@ -17,6 +17,6 @@ namespace GameFramework.Logging
             logger.Flush();
         }
 
-        public ILogger logger;
+        public IGameLogger logger;
     }
 }

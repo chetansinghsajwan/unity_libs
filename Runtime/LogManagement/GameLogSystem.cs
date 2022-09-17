@@ -44,7 +44,7 @@ namespace GameFramework.Logging
             }
         }
 
-        protected virtual ILogger CreateGlobalLogger()
+        protected virtual IGameLogger CreateGlobalLogger()
         {
             var file = new FileLogTarget(GetAddressFor("GameLog"), FileMode.Create);
             file.formatter = new DefaultLogFormatter();
@@ -56,22 +56,22 @@ namespace GameFramework.Logging
             return new AsyncLogger(logger);
         }
 
-        public virtual ILogger CreateLogger(string category, params ILogTarget[] logTargets)
+        public virtual IGameLogger CreateLogger(string category, params ILogTarget[] logTargets)
         {
             return CreateLogger(category, logTargets as IEnumerable<ILogTarget>);
         }
 
-        public virtual ILogger CreateLogger(string category, IEnumerable<ILogTarget> logTargets)
+        public virtual IGameLogger CreateLogger(string category, IEnumerable<ILogTarget> logTargets)
         {
             return CreateSubLogger(GameLog.Logger, category, logTargets);
         }
 
-        public virtual ILogger CreateSubLogger(ILogger logger, string category, params ILogTarget[] logTargets)
+        public virtual IGameLogger CreateSubLogger(IGameLogger logger, string category, params ILogTarget[] logTargets)
         {
             return CreateSubLogger(logger, category, logTargets as IEnumerable<ILogTarget>);
         }
 
-        public virtual ILogger CreateSubLogger(ILogger logger, string category, IEnumerable<ILogTarget> logTargets)
+        public virtual IGameLogger CreateSubLogger(IGameLogger logger, string category, IEnumerable<ILogTarget> logTargets)
         {
             List<ILogTarget> logTargetList = new List<ILogTarget>();
             logTargetList.Add(new LoggerLogTarget(logger));

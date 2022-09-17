@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GameFramework.Logging
 {
-    public interface ILogger
+    public interface IGameLogger
     {
         private static readonly object[] NoPropertyValues = new object[0];
 

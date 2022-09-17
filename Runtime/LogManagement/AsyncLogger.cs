@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 
 namespace GameFramework.Logging
 {
-    public class AsyncLogger : ILogger
+    public class AsyncLogger : IGameLogger
     {
         ~AsyncLogger()
         {
@@ -15,7 +15,7 @@ namespace GameFramework.Logging
             _aSyncEvent.Close();
         }
 
-        public AsyncLogger(ILogger logger, bool completeTasksBeforeDisposing = true)
+        public AsyncLogger(IGameLogger logger, bool completeTasksBeforeDisposing = true)
         {
             if (logger is null)
             {
@@ -84,7 +84,7 @@ namespace GameFramework.Logging
         protected readonly AutoResetEvent _aSyncEvent;
         protected readonly ManualResetEvent _mSyncEvent;
         protected readonly Thread _worker;
-        protected readonly ILogger _logger;
+        protected readonly IGameLogger _logger;
         protected readonly bool _completeTasksBeforeDisposing;
         protected bool _dispose;
     }

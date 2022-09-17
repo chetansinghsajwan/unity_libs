@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GameFramework.Logging
 {
-    public class Logger : ILogger
+    public class Logger : IGameLogger
     {
         public Logger(string category, LogLevel level, params ILogTarget[] logTargets)
             : this(category, level, logTargets as IEnumerable<ILogTarget>) { }
