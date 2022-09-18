@@ -35,7 +35,7 @@ namespace GameFramework.Logging
             _logPath = Application.temporaryCachePath;
 #endif
 
-            Debug.Log($"<b>GameLog LogPath:</b> {_logPath}");
+            Debug.Log($"<b>GameLogSystem LogPath:</b> {_logPath}");
 
             GameLog.Logger = CreateGlobalLogger();
             if (GameLog.Logger is null)
@@ -77,7 +77,7 @@ namespace GameFramework.Logging
             logTargetList.Add(new LoggerLogTarget(logger));
             logTargetList.AddRange(logTargets);
 
-            return new Logger(category, GameLog.DefaultLogLevel, logTargetList.ToArray());
+            return new Logger(category, GameLog.DefaultLogLevel, logTargetList);
         }
 
         public virtual string GetAddressFor(string logFile)
