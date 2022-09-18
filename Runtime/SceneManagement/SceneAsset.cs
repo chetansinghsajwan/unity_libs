@@ -42,11 +42,6 @@ namespace GameFramework
                     _scenePath = Path.ChangeExtension(assetPath, null).Substring(7);
                 }
             }
-
-            if (prevScenePath != _scenePath)
-            {
-                Debug.Log($"<b>SceneReferenceSerializer:</b> OnAfterSerialize(): ScenePath[{_scenePath}]");
-            }
         }
 
         public void OnAfterDeserialize() { }
