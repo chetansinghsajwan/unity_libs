@@ -88,7 +88,7 @@ namespace GameFramework
             }
 
             GameSystem parentSystem = null;
-            SystemType parentSystemType = attribute.parent;
+            SystemType parentSystemType = null;
 
             if (parentSystemType is not null)
             {
@@ -135,7 +135,7 @@ namespace GameFramework
             }
 
             parentSystem.SubSystems.RegisterSystem(system,
-                attribute.type, attribute.priority, attribute.force);
+                attribute.type, 0, attribute.force);
         }
     }
 }
