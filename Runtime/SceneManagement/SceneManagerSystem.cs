@@ -8,7 +8,7 @@ using UnityAsyncOperation = UnityEngine.AsyncOperation;
 
 namespace GameFramework
 {
-    [GameSystemRegistration(typeof(SceneManagerSystem))]
+    [RegisterGameSystem(typeof(SceneManagerSystem))]
     public class SceneManagerSystem : GameSystem
     {
         protected override void OnRegistered(GameSystem system)

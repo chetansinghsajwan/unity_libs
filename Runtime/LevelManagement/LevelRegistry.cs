@@ -10,7 +10,7 @@ namespace GameFramework.LevelManagement
 
     public interface ILevelKeyResolver : IKeyResolver<string, LevelAsset> { }
 
-    [GameSystemRegistration(typeof(LevelRegistry))]
+    [RegisterGameSystem(typeof(LevelRegistry))]
     public class LevelRegistry : GameSystem
     {
         public struct KeyResolver : ILevelKeyResolver

@@ -2,7 +2,7 @@ using System;
 
 namespace GameFramework.LevelManagement
 {
-    [GameSystemRegistration(typeof(LevelManagerSystem))]
+    [RegisterGameSystem(typeof(LevelManagerSystem))]
     public class LevelManagerSystem : GameSystem
     {
         protected override void OnRegistered(GameSystem system)
