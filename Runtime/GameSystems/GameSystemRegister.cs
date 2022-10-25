@@ -6,18 +6,18 @@ using SystemType = System.Type;
 
 namespace GameFramework
 {
-    public interface IGameSystemPriorityResolver
-    {
-        int ResolvePriority(GameSystem system, SystemType type);
-    }
-
-    public interface IGameSystemTypeValidator
-    {
-        bool Validate(SystemType type);
-    }
-
     public class GameSystemRegister : IReadOnlyCollection<GameSystem>
     {
+        public interface IPriorityResolver
+        {
+            int ResolvePriority(GameSystem system, SystemType type);
+        }
+
+        public interface ISystemTypeValidator
+        {
+            bool Validate(SystemType type);
+        }
+
         protected readonly struct NodeKey
         {
             public readonly int priority;
@@ -43,7 +43,7 @@ namespace GameFramework
             }
         }
 
-        protected readonly struct PriorityResolver : IGameSystemPriorityResolver
+        protected readonly struct PriorityResolver : IPriorityResolver
         {
             public int ResolvePriority(GameSystem system, SystemType type)
             {
@@ -51,7 +51,7 @@ namespace GameFramework
             }
         }
 
-        protected readonly struct TypeValidator : IGameSystemTypeValidator
+        protected readonly struct TypeValidator : ISystemTypeValidator
         {
             public bool Validate(SystemType type)
             {
@@ -68,11 +68,11 @@ namespace GameFramework
 
         public GameSystemRegister()
         {
-            this.typeValidator = new TypeValidator();
-            this.priorityResolver = new PriorityResolver();
-            this.keyComparer = new Comparer();
+            typeValidator = new TypeValidator();
+            priorityResolver = new PriorityResolver();
+            mKeyComparer = new Comparer();
 
-            _systems = new SortedList<NodeKey, GameSystem>(keyComparer);
+            mSystems = new SortedList<NodeKey, GameSystem>(mKeyComparer);
         }
 
         public bool RegisterSystem(GameSystem system)
@@ -117,12 +117,12 @@ namespace GameFramework
             GameSystem prevSystem = null;
             if (type is not null)
             {
-                _systems.TryGetValue(new NodeKey(type, 0), out prevSystem);
+                mSystems.TryGetValue(new NodeKey(type, 0), out prevSystem);
             }
 
             if (prevSystem is null || force)
             {
-                _systems[new NodeKey(type, priority.Value)] = system;
+                mSystems[new NodeKey(type, priority.Value)] = system;
 
                 if (prevSystem is not null)
                 {
@@ -159,7 +159,7 @@ namespace GameFramework
                 return false;
             }
 
-            bool unregistered = _systems.Remove(new NodeKey(type, 0), out system);
+            bool unregistered = mSystems.Remove(new NodeKey(type, 0), out system);
             if (system is not null)
             {
                 OnSubSystemUnregistered?.Invoke(system, type);
@@ -180,13 +180,13 @@ namespace GameFramework
                 return null;
             }
 
-            _systems.TryGetValue(new NodeKey(type, 0), out GameSystem system);
+            mSystems.TryGetValue(new NodeKey(type, 0), out GameSystem system);
             return system;
         }
 
         public virtual T GetSystemAs<T>() where T : GameSystem
         {
-            foreach (var system in _systems.Values)
+            foreach (var system in mSystems.Values)
             {
                 if (system is T value)
                 {
@@ -209,7 +209,7 @@ namespace GameFramework
 
         public virtual IEnumerator<GameSystem> GetEnumerator()
         {
-            return _systems.Values.GetEnumerator();
+            return mSystems.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -217,15 +217,15 @@ namespace GameFramework
             return GetEnumerator();
         }
 
-        public readonly IGameSystemPriorityResolver priorityResolver;
-        public readonly IGameSystemTypeValidator typeValidator;
-        protected readonly IComparer<NodeKey> keyComparer;
+        public readonly IPriorityResolver priorityResolver;
+        public readonly ISystemTypeValidator typeValidator;
+        protected readonly IComparer<NodeKey> mKeyComparer;
 
         public event Action<GameSystem, SystemType> OnSubSystemRegistered;
         public event Action<GameSystem, SystemType> OnSubSystemUnregistered;
 
-        public int Count => _systems.Count;
+        public int Count => mSystems.Count;
 
-        protected IDictionary<NodeKey, GameSystem> _systems;
+        protected IDictionary<NodeKey, GameSystem> mSystems;
     }
 }
