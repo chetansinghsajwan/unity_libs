@@ -51,7 +51,7 @@ namespace GameFramework
                 {
                     if (type.IsSubclassOf(typeof(GameSystem)) is false) continue;
 
-                    var attribute = type.GetCustomAttribute<GameSystemRegistrationAttribute>();
+                    var attribute = type.GetCustomAttribute<RegisterGameSystemAttribute>();
                     if (attribute is null) continue;
 
                     yield return type;
@@ -81,10 +81,10 @@ namespace GameFramework
                 throw new Exception($"cannot create a system of null type");
             }
 
-            var attribute = systemType.GetCustomAttribute<GameSystemRegistrationAttribute>();
+            var attribute = systemType.GetCustomAttribute<RegisterGameSystemAttribute>();
             if (attribute is null)
             {
-                throw new Exception($"{systemType.FullName} does not contain {nameof(GameSystemRegistrationAttribute)} attribute");
+                throw new Exception($"{systemType.FullName} does not contain {nameof(RegisterGameSystemAttribute)} attribute");
             }
 
             GameSystem parentSystem = null;

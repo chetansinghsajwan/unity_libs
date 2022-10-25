@@ -4,9 +4,9 @@ using SystemType = System.Type;
 namespace GameFramework
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class GameSystemRegistrationAttribute : Attribute
+    public class RegisterGameSystemAttribute : Attribute
     {
-        public GameSystemRegistrationAttribute(SystemType type)
+        public RegisterGameSystemAttribute(SystemType type)
         {
             this.type = type;
             this.parent = null;

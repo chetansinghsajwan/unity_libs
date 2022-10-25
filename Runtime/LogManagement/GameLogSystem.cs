@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GameFramework.Logging
 {
-    [GameSystemRegistration(typeof(GameLogSystem))]
+    [RegisterGameSystem(typeof(GameLogSystem))]
     public class GameLogSystem : GameSystem
     {
         public struct DefaultLogFormatter : ILogFormatter
