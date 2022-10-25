@@ -3,9 +3,9 @@ using SystemType = System.Type;
 
 namespace GameFramework
 {
-    public class BufferedGameSystemManager : GameSystemManager
+    public class BufferedGameSystemRegister : GameSystemRegister
     {
-        public BufferedGameSystemManager()
+        public BufferedGameSystemRegister()
         {
             _systemsBuffer = new SortedList<NodeKey, GameSystem>(keyComparer);
             InternalWriteChanges();

@@ -4,11 +4,11 @@ namespace GameFramework
 {
     public abstract class GameSystem
     {
-        public GameSystem() : this(new GameSystemManager()) { }
+        public GameSystem() : this(new GameSystemRegister()) { }
 
-        public GameSystem(GameSystemManager subSystemManager)
+        public GameSystem(GameSystemRegister subSystemManager)
         {
-            subSystemManager ??= NullGameSystemManager.Instance;
+            subSystemManager ??= NullGameSystemRegister.Instance;
 
             this.SubSystems = subSystemManager;
             this.SubSystems.OnSubSystemRegistered += OnSubSystemRegistered;
@@ -80,6 +80,6 @@ namespace GameFramework
             system?.OnRegistered(this);
         }
 
-        public readonly GameSystemManager SubSystems;
+        public readonly GameSystemRegister SubSystems;
     }
 }

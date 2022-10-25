@@ -16,7 +16,7 @@ namespace GameFramework
         bool Validate(SystemType type);
     }
 
-    public class GameSystemManager : IReadOnlyCollection<GameSystem>
+    public class GameSystemRegister : IReadOnlyCollection<GameSystem>
     {
         protected readonly struct NodeKey
         {
@@ -66,7 +66,7 @@ namespace GameFramework
             }
         }
 
-        public GameSystemManager()
+        public GameSystemRegister()
         {
             this.typeValidator = new TypeValidator();
             this.priorityResolver = new PriorityResolver();
