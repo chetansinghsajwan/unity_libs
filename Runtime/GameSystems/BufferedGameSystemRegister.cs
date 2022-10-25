@@ -7,7 +7,7 @@ namespace GameFramework
     {
         public BufferedGameSystemRegister()
         {
-            _systemsBuffer = new SortedList<NodeKey, GameSystem>(keyComparer);
+            _systemsBuffer = new SortedList<NodeKey, GameSystem>(mKeyComparer);
             InternalWriteChanges();
         }
 
@@ -51,10 +51,10 @@ namespace GameFramework
         {
             _systemsBuffer.Clear();
 
-            if (_systems is not null)
+            if (mSystems is not null)
             {
-                _systemsBuffer.Capacity = _systems.Count;
-                foreach (var item in _systems)
+                _systemsBuffer.Capacity = mSystems.Count;
+                foreach (var item in mSystems)
                 {
                     _systemsBuffer.Add(item.Key, item.Value);
                 }
