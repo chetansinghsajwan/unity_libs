@@ -2,11 +2,11 @@ using SystemType = System.Type;
 
 namespace GameFramework
 {
-    public sealed class NullGameSystemManager : GameSystemManager
+    public sealed class NullGameSystemRegister : GameSystemRegister
     {
-        public static readonly GameSystemManager Instance = new NullGameSystemManager();
+        public static readonly GameSystemRegister Instance = new NullGameSystemRegister();
 
-        private NullGameSystemManager() { }
+        private NullGameSystemRegister() { }
 
         public override bool RegisterSystem(GameSystem system, SystemType type, int? priority, bool force = false)
         {

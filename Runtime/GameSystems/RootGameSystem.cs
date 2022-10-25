@@ -7,9 +7,9 @@ namespace GameFramework
 {
     public class RootGameSystem : GameSystem
     {
-        public RootGameSystem() : this(new BufferedGameSystemManager()) { }
+        public RootGameSystem() : this(new BufferedGameSystemRegister()) { }
 
-        public RootGameSystem(GameSystemManager systemManager) : base(systemManager)
+        public RootGameSystem(GameSystemRegister systemManager) : base(systemManager)
         {
             Init();
         }
