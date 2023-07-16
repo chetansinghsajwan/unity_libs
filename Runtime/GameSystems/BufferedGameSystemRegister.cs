@@ -8,7 +8,7 @@ namespace GameFramework
         public BufferedGameSystemRegister()
         {
             _systemsBuffer = new SortedList<NodeKey, GameSystem>(mKeyComparer);
-            InternalWriteChanges();
+            _WriteChanges();
         }
 
         public void WriteChanges()
@@ -16,11 +16,12 @@ namespace GameFramework
             if (_hasChanges)
             {
                 _hasChanges = false;
-                InternalWriteChanges();
+                _WriteChanges();
             }
         }
 
-        public override bool RegisterSystem(GameSystem system, SystemType type, int? priority, bool force = false)
+        public override bool RegisterSystem(GameSystem system, SystemType type, int? priority,
+            bool force = false)
         {
             if (base.RegisterSystem(system, type, priority, force))
             {
@@ -47,7 +48,7 @@ namespace GameFramework
             return _systemsBuffer.Values.GetEnumerator();
         }
 
-        protected virtual void InternalWriteChanges()
+        protected virtual void _WriteChanges()
         {
             _systemsBuffer.Clear();
 

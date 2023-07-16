@@ -5,7 +5,8 @@ namespace GameFramework
 {
     public class UnityRootGameSystem : RootGameSystem
     {
-        public UnityRootGameSystem() : base(new BufferedGameSystemRegister()) { }
+        public UnityRootGameSystem() :
+            base(new BufferedGameSystemRegister()) { }
 
         protected override void Init()
         {

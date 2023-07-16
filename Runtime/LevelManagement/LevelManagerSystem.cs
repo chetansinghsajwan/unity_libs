@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Contracts;
 
 namespace GameFramework.LevelManagement
 {
@@ -12,22 +13,35 @@ namespace GameFramework.LevelManagement
             LevelManager.System = this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 
+        /// <param name="level"></param>
+        /// 
+        /// <todo>
+        /// Do not accept null to unload the level. Instead write unload logic in UnloadLevel.
+        /// </todo>
+        /// 
+        /// <returns></returns>
         public virtual LevelAsyncOperation LoadLevelAsync(LevelAsset level)
         {
+            // Contract.Assume(level is not null);
+
             if (level == _activeLevel)
             {
                 return LevelAsyncOperation.Completed;
             }
 
-            LevelAsyncOperation levelOperation = new LevelAsyncOperation();
+            LevelAsyncOperation levelOp = new LevelAsyncOperation();
 
-            // operationSource to hold the completion of operation explicitly
-            AsyncOperationSource operationSource = new AsyncOperationSource();
-            levelOperation.AddOperation(operationSource);
+            // opSrc to hold the completion of op explicitly
+            AsyncOperationSource opSrc = new AsyncOperationSource();
+            levelOp.AddOperation(opSrc);
 
-            InternalLoadLevelAsync(levelOperation, operationSource, level);
+            _LoadLevelAsync(levelOp, opSrc, level);
 
-            return levelOperation;
+            return levelOp;
         }
 
         public virtual LevelAsyncOperation UnloadLevelAsync()
@@ -35,50 +49,51 @@ namespace GameFramework.LevelManagement
             return LoadLevelAsync(null);
         }
 
-        protected virtual async void InternalLoadLevelAsync(LevelAsyncOperation operation, AsyncOperationSource operationSource, LevelAsset level)
+        protected virtual async void _LoadLevelAsync(LevelAsyncOperation op, 
+            AsyncOperationSource opSrc, LevelAsset level)
         {
             LevelAsset currentLevel = _activeLevel;
 
             if (level is not null)
             {
-                BeforeLevelLoad?.Invoke(level);
+                BeforeLevelLoadEvent?.Invoke(level);
 
                 LevelAsyncOperation loadOp = level.PerformLoad();
 
                 if (currentLevel is null)
                 {
-                    operation.AddOperation(loadOp, 1f);
+                    op.AddOperation(loadOp, 1f);
                 }
                 else
                 {
-                    operation.AddOperation(loadOp, .9f);
+                    op.AddOperation(loadOp, .9f);
                 }
 
                 await loadOp;
 
                 _activeLevel = level;
-                AfterLevelLoad?.Invoke(level);
+                AfterLevelLoadEvent?.Invoke(level);
             }
 
             if (currentLevel is not null)
             {
-                BeforeLevelUnload?.Invoke(currentLevel);
+                BeforeLevelUnloadEvent?.Invoke(currentLevel);
 
                 LevelAsyncOperation unloadOp = currentLevel.PerformUnload();
-                operation.AddOperation(unloadOp, .1f);
+                op.AddOperation(unloadOp, .1f);
 
                 await unloadOp;
 
-                AfterLevelUnload?.Invoke(currentLevel);
+                AfterLevelUnloadEvent?.Invoke(currentLevel);
             }
 
-            operationSource.SetCompleted();
+            opSrc.SetCompleted();
         }
 
-        public event Action<LevelAsset> BeforeLevelLoad;
-        public event Action<LevelAsset> AfterLevelLoad;
-        public event Action<LevelAsset> BeforeLevelUnload;
-        public event Action<LevelAsset> AfterLevelUnload;
+        public event Action<LevelAsset> BeforeLevelLoadEvent;
+        public event Action<LevelAsset> AfterLevelLoadEvent;
+        public event Action<LevelAsset> BeforeLevelUnloadEvent;
+        public event Action<LevelAsset> AfterLevelUnloadEvent;
 
         protected LevelAsset _activeLevel;
         public LevelAsset ActiveLevel => _activeLevel;

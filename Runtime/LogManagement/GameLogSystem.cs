@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameFramework.Logging
-{
+{    
     [RegisterGameSystem(typeof(GameLogSystem))]
     public class GameLogSystem : GameSystem
     {
@@ -86,7 +86,8 @@ namespace GameFramework.Logging
             return Path.Combine(_logPath, name);
         }
 
-        protected string _logPath;
         public string LogPath => _logPath;
+
+        protected string _logPath;
     }
 }
