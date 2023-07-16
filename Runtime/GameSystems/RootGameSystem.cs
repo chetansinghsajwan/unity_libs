@@ -28,10 +28,10 @@ namespace GameFramework
             IEnumerable<SystemType> enumerator()
             {
                 foreach (var assembly in assemblies)
-                    foreach (var systemType in FindSystemsFromAssembly(assembly))
-                    {
-                        yield return systemType;
-                    }
+                foreach (var systemType in FindSystemsFromAssembly(assembly))
+                {
+                    yield return systemType;
+                }
             }
 
             CreateAndRegisterSystemsFromTypes(enumerator());
@@ -39,7 +39,8 @@ namespace GameFramework
 
         protected virtual void RegisterSystemsFromAssembly(Assembly assembly)
         {
-            // no need to check for (assembly is null), FindSystemsFromAssembly(assembly) does that for us
+            // no need to check if (assembly is null), FindSystemsFromAssembly(assembly) 
+            // does that for us
             CreateAndRegisterSystemsFromTypes(FindSystemsFromAssembly(assembly));
         }
 

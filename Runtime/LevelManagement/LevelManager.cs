@@ -30,26 +30,26 @@ namespace GameFramework.LevelManagement
 
         public static event Action<LevelAsset> BeforeLevelLoad
         {
-            add => _system.BeforeLevelLoad += value;
-            remove => _system.BeforeLevelLoad -= value;
+            add => _system.BeforeLevelLoadEvent += value;
+            remove => _system.BeforeLevelLoadEvent -= value;
         }
 
         public static event Action<LevelAsset> AfterLevelLoad
         {
-            add => _system.AfterLevelLoad += value;
-            remove => _system.AfterLevelLoad -= value;
+            add => _system.AfterLevelLoadEvent += value;
+            remove => _system.AfterLevelLoadEvent -= value;
         }
 
         public static event Action<LevelAsset> BeforeLevelUnload
         {
-            add => _system.BeforeLevelUnload += value;
-            remove => _system.BeforeLevelUnload -= value;
+            add => _system.BeforeLevelUnloadEvent += value;
+            remove => _system.BeforeLevelUnloadEvent -= value;
         }
 
         public static event Action<LevelAsset> AfterLevelUnload
         {
-            add => _system.AfterLevelUnload += value;
-            remove => _system.AfterLevelUnload -= value;
+            add => _system.AfterLevelUnloadEvent += value;
+            remove => _system.AfterLevelUnloadEvent -= value;
         }
 
         public static LevelAsset ActiveLevel

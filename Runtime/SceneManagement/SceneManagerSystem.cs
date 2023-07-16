@@ -31,7 +31,7 @@ namespace GameFramework
 
                     return null;
                 })
-                .Single((SceneObject sceneObject) => sceneObject is not null);
+                .First((SceneObject sceneObject) => sceneObject is not null);
         }
 
         public virtual SceneObject[] FindSceneObjectsFor(SceneAsset scene)
