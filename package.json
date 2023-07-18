@@ -1,10 +1,9 @@
 {
-  "name": "com.shifu.game-framework",
+  "name": "com.shifu.unity-libs",
   "version": "0.1.0",
-  "displayName": "GameFramework",
-  "description": "Basic unity framework to build games upon.",
+  "displayName": "UnityLibs",
+  "description": "Unity libraries to support unity with extended or improved features.",
   "keywords": [
-    "framework",
     "library",
     "design"
   ]

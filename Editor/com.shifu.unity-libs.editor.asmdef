@@ -1,0 +1,7 @@
+{
+    "name": "com.shifu.unity-libs.editor",
+    "references":
+    [
+        "com.shifu.unity-libs"
+    ]
+}
