@@ -22,31 +22,16 @@ namespace GameFramework
         {
             string sceneName = Path.GetFileName(scene.scenePath);
             return GameObject.FindGameObjectsWithTag(SceneObject.GAME_OBJECT_TAG)
-                .Select((GameObject gameObject) =>
-                {
-                    if (gameObject.scene.name == sceneName)
-                    {
-                        return gameObject.GetComponent<SceneObject>();
-                    }
-
-                    return null;
-                })
-                .First((SceneObject sceneObject) => sceneObject is not null);
+                .Select(go => go.scene.name == sceneName ? go.GetComponent<SceneObject>() : null)
+                .FirstOrDefault(so => so is not null);
         }
 
         public virtual SceneObject[] FindSceneObjectsFor(SceneAsset scene)
         {
             string sceneName = Path.GetFileName(scene.scenePath);
             return GameObject.FindGameObjectsWithTag(SceneObject.GAME_OBJECT_TAG)
-                .Select((GameObject gameObject) =>
-                {
-                    if (gameObject.scene.name == sceneName)
-                    {
-                        return gameObject.GetComponent<SceneObject>();
-                    }
-
-                    return null;
-                })
+                .Select(go => go.scene.name == sceneName ? go.GetComponent<SceneObject>() : null)
+                .Where(so => so is not null)
                 .ToArray();
         }
 

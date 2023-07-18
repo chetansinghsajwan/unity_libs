@@ -10,6 +10,10 @@ namespace GameFramework
         public const int DEFAULT_LAYER_MASK = Physics.DefaultRaycastLayers;
         public const QueryTriggerInteraction DEFAULT_TRIGGER_QUERY = QueryTriggerInteraction.Ignore;
 
+        /// ----------------------------------------------------------------------------------------
+        /// Types
+        /// ----------------------------------------------------------------------------------------
+
         private struct TempColliderUser : IDisposable
         {
             public TempColliderUser(VirtualCapsule capsule, CapsuleCollider collider)
@@ -41,6 +45,10 @@ namespace GameFramework
             private float _height;
         }
 
+        /// ----------------------------------------------------------------------------------------
+        /// Constructors and Destructor
+        /// ----------------------------------------------------------------------------------------
+
         public VirtualCapsule(int layerMask = DEFAULT_LAYER_MASK,
             QueryTriggerInteraction queryTrigger = DEFAULT_TRIGGER_QUERY)
         {
@@ -71,108 +79,9 @@ namespace GameFramework
             ReadValuesFrom(controller);
         }
 
-        /// ----------------------------------------------------------------------------
-
-        public LayerMask layerMask
-        {
-            get => _layerMask;
-            set => _layerMask = value;
-        }
-        public QueryTriggerInteraction queryTrigger
-        {
-            get => _queryTrigger;
-            set => _queryTrigger = value;
-        }
-
-        public Vector3 position
-        {
-            get => _position;
-            set
-            {
-                _position = value;
-                _UpdateCache();
-            }
-        }
-        public Vector3 topSpherePos
-        {
-            get => _topSphere;
-        }
-        public Vector3 baseSpherePos
-        {
-            get => _baseSphere;
-        }
-        public Vector3 topPos
-        {
-            get => _topSphere + (_dirUp * _radius);
-        }
-        public Vector3 basePos
-        {
-            get => _baseSphere + (_dirUp * -_radius);
-        }
-
-        public Quaternion rotation
-        {
-            get => _rotation;
-            set
-            {
-                _rotation = value;
-                _dirUp = _rotation * Vector3.up;
-                _UpdateCache();
-            }
-        }
-        public Vector3 forward => _rotation * Vector3.forward;
-        public Vector3 backward => _rotation * Vector3.back;
-        public Vector3 left => _rotation * Vector3.left;
-        public Vector3 right => _rotation * Vector3.right;
-        public Vector3 up => _rotation * Vector3.up;
-        public Vector3 down => _rotation * Vector3.down;
-
-        public float radius
-        {
-            get => _radius;
-            set
-            {
-                _radius = value;
-                _UpdateCache();
-            }
-        }
-        public float diameter
-        {
-            get => _radius * 2f;
-        }
-        public float height
-        {
-            get => _height;
-            set
-            {
-                _height = value;
-                _UpdateCache();
-            }
-        }
-        public float cylinderHeight
-        {
-            get => Mathf.Max(0, _height - (_radius * 2f));
-        }
-
-        public float sphereVolume
-        {
-            get => Mathf.PI * _radius * _radius;
-        }
-        public float cylinderVolume
-        {
-            get => 2 * Mathf.PI * _radius * cylinderHeight;
-        }
-        public float volume
-        {
-            get => sphereVolume + cylinderVolume;
-        }
-
-        public bool isSphereShaped
-        {
-            get => _height <= _radius * 2f;
-        }
-
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
+        /// Functions
+        /// ----------------------------------------------------------------------------------------
 
         // Reads the values form CapsuleCollider and applies to this VirtualCapsule.
         // After this operation VirtualCapsule will exactly imitate CapsuleCollider
@@ -346,7 +255,7 @@ namespace GameFramework
             controller.height = _height / worldScale.y;
         }
 
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
 
         // Given a point [pos] in worldSpace, returns a point 
         // which is clamped inside or on the surface of this Capsule
@@ -390,7 +299,7 @@ namespace GameFramework
             return ClampPositionInsideVolume(_position + pos);
         }
 
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
 
         // Returns count of overlaps
         public int CapsuleOverlap(out Collider[] colliders)
@@ -400,7 +309,7 @@ namespace GameFramework
         }
 
         // Returns count of overlaps
-        public int CapsuleOverlapNonAlloc(Collider[] colliders)
+        public int CapsuleOverlapNoAlloc(Collider[] colliders)
         {
             if (colliders is null || colliders.Length == 0)
                 return 0;
@@ -408,7 +317,7 @@ namespace GameFramework
             return Physics.OverlapCapsuleNonAlloc(_topSphere, _baseSphere, _radius, colliders, _layerMask, _queryTrigger);
         }
 
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
 
         // Returns true if cast hit something
         public bool CapsuleCast(Vector3 move, out RaycastHit hit)
@@ -424,12 +333,12 @@ namespace GameFramework
         }
 
         // Returns count of hits
-        public int CapsuleCastNonAlloc(Vector3 move, RaycastHit[] hits)
+        public int CapsuleCastNoAlloc(Vector3 move, RaycastHit[] hits)
         {
             return Physics.CapsuleCastNonAlloc(_topSphere, _baseSphere, _radius, move.normalized, hits, move.magnitude, _layerMask, _queryTrigger);
         }
 
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
 
         // Returns count of overlaps
         public int TopSphereOverlap(out Collider[] colliders)
@@ -439,7 +348,7 @@ namespace GameFramework
         }
 
         // Returns count of overlaps
-        public int TopSphereOverlapNonAlloc(Collider[] colliders)
+        public int TopSphereOverlapNoAlloc(Collider[] colliders)
         {
             if (colliders is null || colliders.Length == 0)
                 return 0;
@@ -461,7 +370,7 @@ namespace GameFramework
         }
 
         // Returns count of hits
-        public int TopSphereCastNonAlloc(RaycastHit[] hitResults, Vector3 move)
+        public int TopSphereCastNoAlloc(RaycastHit[] hitResults, Vector3 move)
         {
             if (hitResults is null || hitResults.Length == 0)
                 return 0;
@@ -469,7 +378,7 @@ namespace GameFramework
             return Physics.SphereCastNonAlloc(_topSphere, _radius, move.normalized, hitResults, move.magnitude, _layerMask, _queryTrigger);
         }
 
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
 
         // Returns count of overlaps
         public int BaseSphereOverlap(out Collider[] colliders)
@@ -479,7 +388,7 @@ namespace GameFramework
         }
 
         // Returns count of overlaps
-        public int BaseSphereOverlapNonAlloc(Collider[] colliders)
+        public int BaseSphereOverlapNoAlloc(Collider[] colliders)
         {
             if (colliders is null || colliders.Length == 0)
                 return 0;
@@ -501,7 +410,7 @@ namespace GameFramework
         }
 
         // Returns count of hits
-        public int BaseSphereCastNonAlloc(RaycastHit[] hitResults, Vector3 move)
+        public int BaseSphereCastNoAlloc(RaycastHit[] hitResults, Vector3 move)
         {
             if (hitResults is null || hitResults.Length == 0)
                 return 0;
@@ -509,7 +418,7 @@ namespace GameFramework
             return Physics.SphereCastNonAlloc(_baseSphere, _radius, move.normalized, hitResults, move.magnitude, _layerMask, _queryTrigger);
         }
 
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
 
         // Moves the Capsule, stops on hit
         // Returns the delta move
@@ -533,15 +442,25 @@ namespace GameFramework
             return move;
         }
 
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
 
-        // Calculates the delta move to resolve penetration with the given collider
-        // thisCollider: CapsuleCollider to be used for calculation
-        // NOTE: values of thisCollider are changed, but reverted back after the operation
-        // Returns true if calculation was successfull
-        // If calculation was unsuccessful, moveOut will have value of Vector3.zero
-        // collisionOffset: offset to apply when resolving penetration,
-        //                  this will result in Capsule moving [ResolveValue + CollisionOffset] away from the penetrating collider
+        /// ----------------------------------------------------------------------------------------
+        /// <summary>
+        /// Calculates the delta move to resolve penetration with the given collider.
+        /// </summary>
+        /// 
+        /// <param name="thisCollider"> CapsuleCollider to be used for calculation. </param>
+        /// <param name="moveOut"></param>
+        /// <param name="collider"></param>
+        /// <param name="colliderPosition"></param>
+        /// <param name="colliderRotation"></param>
+        /// <param name="collisionOffset"> Offset to apply when resolving penetration, this will 
+        ///     result in Capsule moving [ResolveValue + CollisionOffset] away from the penetrating 
+        ///     collider </param>
+        ///
+        /// <returns> True if calculation was successfull, else false. </returns>
+        /// If calculation was unsuccessful, moveOut will have value of Vector3.zero
+        /// ----------------------------------------------------------------------------------------
         public bool ComputePenetration(CapsuleCollider thisCollider, out Vector3 moveOut,
             CapsuleCollider collider, Vector3 colliderPosition, Quaternion colliderRotation,
             float collisionOffset = DEFAULT_COLLISION_OFFSET)
@@ -568,10 +487,22 @@ namespace GameFramework
             }
         }
 
-        // Performs overlap scan and calculates to Vector3 to resolve penetration
-        // NOTE: values of thisCollider are changed, but reverted back after the operation
-        // collisionOffset: offset to apply when resolving penetration,
-        //                  this will result in Capsule moving [ResolveValue + CollisionOffset] away from the penetrating collider
+        /// ----------------------------------------------------------------------------------------
+        /// <summary>
+        /// Performs overlap scan and calculates to Vector3 to resolve penetration
+        /// </summary>
+        /// <param name="thisCollider"></param>
+        /// <param name="moveOut"></param>
+        /// <param name="collisionOffset">
+        /// Offset to apply when resolving penetration, this will result in Capsule moving 
+        /// [ResolveValue + CollisionOffset] away from the penetrating collider
+        /// </param>
+        /// <returns></returns>
+        /// 
+        /// <note>
+        /// values of thisCollider are changed, but reverted back after the operation
+        /// </note>
+        /// ----------------------------------------------------------------------------------------
         public bool ResolvePenetrationInfo(CapsuleCollider thisCollider, out Vector3 moveOut,
             float collisionOffset = DEFAULT_COLLISION_OFFSET)
         {
@@ -605,10 +536,19 @@ namespace GameFramework
             return true;
         }
 
-        // Calls ResolvePenetrationInfo and applies the output to resolve the penetration
-        // collisionOffset: offset to apply when resolving penetration,
-        //                  this will result in Capsule moving [ResolveValue + CollisionOffset] away from the penetrating collider
-        public Vector3 ResolvePenetration(CapsuleCollider thisCollider, float collisionOffset = DEFAULT_COLLISION_OFFSET)
+        /// ----------------------------------------------------------------------------------------
+        /// <summary>
+        /// Calls ResolvePenetrationInfo and applies the output to resolve the penetration
+        /// </summary>
+        /// <param name="thisCollider"></param>
+        /// <param name="collisionOffset">
+        /// Offset to apply when resolving penetration, this will result in Capsule moving 
+        /// [ResolveValue + CollisionOffset] away from the penetrating collider
+        /// </param>
+        /// <returns></returns>
+        /// ----------------------------------------------------------------------------------------
+        public Vector3 ResolvePenetration(CapsuleCollider thisCollider,
+            float collisionOffset = DEFAULT_COLLISION_OFFSET)
         {
             if (ResolvePenetrationInfo(thisCollider, out Vector3 moveOut, collisionOffset))
             {
@@ -619,8 +559,6 @@ namespace GameFramework
             return Vector3.zero;
         }
 
-        /// ----------------------------------------------------------------------------
-
         private void _UpdateCache()
         {
             float length = Mathf.Max(0, (_height / 2f) - _radius);
@@ -628,7 +566,83 @@ namespace GameFramework
             _baseSphere = _position + (_dirUp * -length);
         }
 
-        /// ----------------------------------------------------------------------------
+        /// ----------------------------------------------------------------------------------------
+        /// Properties and Fields
+        /// ----------------------------------------------------------------------------------------
+
+        public LayerMask layerMask
+        {
+            get => _layerMask;
+            set => _layerMask = value;
+        }
+
+        public QueryTriggerInteraction queryTrigger
+        {
+            get => _queryTrigger;
+            set => _queryTrigger = value;
+        }
+
+        public Vector3 position
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+                _UpdateCache();
+            }
+        }
+
+        public Vector3 topSpherePos => _topSphere;
+        public Vector3 baseSpherePos => _baseSphere;
+        public Vector3 topPos => _topSphere + (_dirUp * _radius);
+        public Vector3 basePos => _baseSphere + (_dirUp * -_radius);
+
+        public Quaternion rotation
+        {
+            get => _rotation;
+            set
+            {
+                _rotation = value;
+                _dirUp = _rotation * Vector3.up;
+                _UpdateCache();
+            }
+        }
+
+        public Vector3 forward => _rotation * Vector3.forward;
+        public Vector3 backward => _rotation * Vector3.back;
+        public Vector3 left => _rotation * Vector3.left;
+        public Vector3 right => _rotation * Vector3.right;
+        public Vector3 up => _rotation * Vector3.up;
+        public Vector3 down => _rotation * Vector3.down;
+
+        public float radius
+        {
+            get => _radius;
+            set
+            {
+                _radius = value;
+                _UpdateCache();
+            }
+        }
+
+        public float diameter => _radius * 2f;
+
+        public float height
+        {
+            get => _height;
+            set
+            {
+                _height = value;
+                _UpdateCache();
+            }
+        }
+
+        public float cylinderHeight => Mathf.Max(0, _height - (_radius * 2f));
+        public float sphereVolume => Mathf.PI * _radius * _radius;
+        public float cylinderVolume => 2 * Mathf.PI * _radius * cylinderHeight;
+        public float volume => sphereVolume + cylinderVolume;
+
+        public bool isSphereShaped => _height <= _radius * 2f;
 
         [SerializeField] private Vector3 _position;
         [SerializeField] private Quaternion _rotation;

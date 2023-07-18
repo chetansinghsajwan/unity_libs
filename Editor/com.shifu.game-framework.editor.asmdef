@@ -1,7 +1,0 @@
-{
-    "name": "com.shifu.game-framework.editor",
-    "references":
-    [
-        "com.shifu.game-framework"
-    ]
-}
